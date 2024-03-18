@@ -8,7 +8,7 @@ Informasi lebih lanjut dapat ditemukan di [situs resmi](https://codeigniter.com)
 # Instalasi
 ## Instalasi Composer
 Komposer dapat digunakan dalam beberapa cara untuk menginstal CodeIgniter4 di sistem Anda.
-> [!PENTING]
+> [!WARNING]
 > CodeIgniter4 memerlukan Composer 2.0.14 atau lebih baru.
 
 This repository holds a composer-installable app starter.
