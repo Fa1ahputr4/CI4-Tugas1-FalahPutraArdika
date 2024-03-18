@@ -21,8 +21,14 @@ Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, y
    Pada folder Root anda
    ```shell
    "composer create-project codeigniter4/appstarter project-root"
+   ```
+   Perintah di atas akan membuat folder root proyek .
+   Jika Anda menghilangkan argumen “project-root”, perintah akan membuat folder “appstarter”, yang dapat diganti namanya sesuai kebutuhan.
+
+   >[!NOTE]
+   >Sebelum v4.4.0, autoloader CodeIgniter tidak mengizinkan karakter khusus yang ilegal dalam nama file pada sistem operasi tertentu. Simbol yang dapat digunakan adalah /,       _, ., :, \dan spasi. Jadi jika Anda menginstal CodeIgniter di bawah folder yang berisi karakter khusus seperti (, ), dll., CodeIgniter tidak berfungsi. Sejak v4.4.0,          pembatasan ini telah dihapus.
    
-3. INstalasi Kedua
+3. Instalasi Kedua
 
 This repository holds a composer-installable app starter.
 It has been built from the
