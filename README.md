@@ -16,7 +16,7 @@ Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, y
 >[!NOTE]
 >Jika Anda menggunakan repositori Git untuk menyimpan kode Anda, atau untuk berkolaborasi dengan orang lain, maka folder vendor biasanya akan “git diabaikan”. Dalam kasus seperti ini, Anda perlu melakukan hal berikut saat mengkloning repositori ke sistem baru.`composer update`
 
-1. Instalasi Pertama
+### Buat Project Baru
    Instalasi ini digunakan untuk pemula yang baru akan membuart project dari awal
    Pada folder Root anda
    ```shell
@@ -33,7 +33,11 @@ Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, y
    >perintah di atas akan menghapus paket Composer hanya untuk pengembangan yang tidak diperlukan di lingkungan produksi. Ini akan sangat mengurangi ukuran folder vendor.
 
    
-3. Instalasi Kedua
+### Menambahkan CodeIgniter4 ke project yang ada
+Di root project anda ketikan sebagai berikut :
+```shell
+composer require codeigniter4/framework
+```
 
 This repository holds a composer-installable app starter.
 It has been built from the
