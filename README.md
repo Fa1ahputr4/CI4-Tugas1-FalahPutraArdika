@@ -5,8 +5,8 @@
 CodeIgniter adalah framework web full-stack PHP yang ringan, cepat, fleksibel dan aman.
 Informasi lebih lanjut dapat ditemukan di [situs resmi](https://codeigniter.com).
 
-# Instalasi
-## Instalasi Composer
+# > Instalasi
+## > Instalasi Composer
 Komposer dapat digunakan dalam beberapa cara untuk menginstal CodeIgniter4 di sistem Anda.
 > [!IMPORTANT]
 > CodeIgniter4 memerlukan Composer 2.0.14 atau lebih baru.
