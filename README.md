@@ -14,7 +14,15 @@ Komposer dapat digunakan dalam beberapa cara untuk menginstal CodeIgniter4 di si
 Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, yang kemudian akan Anda gunakan sebagai dasar untuk aplikasi web baru. Teknik kedua yang dijelaskan di bawah ini memungkinkan Anda menambahkan CodeIgniter4 ke aplikasi web yang sudah ada,
 
 >[!NOTE]
->ika Anda menggunakan repositori Git untuk menyimpan kode Anda, atau untuk berkolaborasi dengan orang lain, maka folder vendor biasanya akan “git diabaikan”. Dalam kasus seperti ini, Anda perlu melakukan hal berikut saat mengkloning repositori ke sistem baru. .shell composer update
+>ika Anda menggunakan repositori Git untuk menyimpan kode Anda, atau untuk berkolaborasi dengan orang lain, maka folder vendor biasanya akan “git diabaikan”. Dalam kasus seperti ini, Anda perlu melakukan hal berikut saat mengkloning repositori ke sistem baru.`composer update`
+
+1. Instalasi Pertama
+   Instalasi ini digunakan untuk pemula yang baru akan membuart project dari awal
+   Pada folder Root anda
+   ```shell
+   echo "composer create-project codeigniter4/appstarter project-root"
+   
+3. INstalasi Kedua
 
 This repository holds a composer-installable app starter.
 It has been built from the
