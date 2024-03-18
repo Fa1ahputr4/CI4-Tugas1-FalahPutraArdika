@@ -1,6 +1,6 @@
 # CodeIgniter 4 
 
-## Apa itu CodeIgniter4 ?
+## *Apa itu CodeIgniter4 ?
 
 CodeIgniter adalah framework web full-stack PHP yang ringan, cepat, fleksibel dan aman.
 Informasi lebih lanjut dapat ditemukan di [situs resmi](https://codeigniter.com).
