@@ -6,7 +6,7 @@ CodeIgniter adalah framework web full-stack PHP yang ringan, cepat, fleksibel da
 Informasi lebih lanjut dapat ditemukan di [situs resmi](https://codeigniter.com).
 
 # > Instalasi
-## *Instalasi Composer
+# *Instalasi Composer
 Komposer dapat digunakan dalam beberapa cara untuk menginstal CodeIgniter4 di sistem Anda.
 > [!IMPORTANT]
 > CodeIgniter4 memerlukan Composer 2.0.14 atau lebih baru.
@@ -40,7 +40,7 @@ composer require codeigniter4/framework
 ```
 
 # > Bangun Aplikasi Pertama Anda
-## *Halaman Statis
+# *Halaman Statis
 Hal pertama yang akan Anda lakukan adalah menyiapkan aturan perutean untuk menangani halaman statis.
 
 Perutean mengaitkan URI dengan metode pengontrol. Pengontrol hanyalah sebuah kelas yang membantu mendelegasikan pekerjaan. Kami akan membuat pengontrol nanti.
@@ -137,7 +137,7 @@ Hasilnya sebagai berikut :
 
 ![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/9119faec-e884-473e-b17d-ebe9b1b2eb7c)
 
-## *Struktur Aplikasi
+# *Struktur Aplikasi
 Untuk mendapatkan hasil maksimal dari CodeIgniter, Anda perlu memahami bagaimana struktur aplikasi, secara default, dan apa yang dapat Anda ubah untuk memenuhi kebutuhan aplikasi Anda.
 
 ### Aplikasi
@@ -155,7 +155,7 @@ Direktori ini menampung semua direktori yang mungkin perlu ditulisi selama masa 
 ### Test
 Direktori ini disiapkan untuk menyimpan file pengujian Anda. Direktori ini _supportmenampung berbagai kelas tiruan dan utilitas lain yang dapat Anda gunakan saat menulis pengujian Anda. Direktori ini tidak perlu ditransfer ke server produksi Anda.
 
-## *Mode;, View, dan Controller
+# *Mode;, View, dan Controller
 ### Apa itu MVC?
 Setiap kali Anda membuat aplikasi, Anda harus menemukan cara untuk mengatur kode agar mudah menemukan file yang tepat dan memudahkan pemeliharaan. Seperti kebanyakan kerangka web, CodeIgniter menggunakan pola Model, View, Controller (MVC) untuk mengatur file. Hal ini menjaga data, presentasi, dan aliran melalui aplikasi sebagai bagian yang terpisah.
 
@@ -168,7 +168,7 @@ View adalah file yang sederhana dan biasanya berbentuk HTML dengan sedikit kode 
 ### Controller
 Pengendali merupakan bagian yang menghubungkan pengguna dengan aplikasi. Mereka menerima masukan dari pengguna, seperti klik tombol atau permintaan halaman, dan menentukan tindakan yang harus dilakukan selanjutnya. Pengendali juga menangani tugas-tugas terkait permintaan HTTP, seperti verifikasi pengguna atau pengalihan halaman.
 
-## *Bagian Berita
+# *Bagian Berita
 Di bagian ini, kita membahas beberapa konsep dasar kerangka kerja dengan menulis kelas yang mereferensikan halaman statis. Kami membersihkan URI dengan menambahkan aturan perutean khusus. Sekarang saatnya memperkenalkan konten dinamis dan mulai menggunakan database.
 
 ### Buat Database
@@ -331,3 +331,140 @@ Buat app/Views/news/index.php dan tambahkan potongan kode berikutnya.
 ### Berikut Hasilnya 
 ![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/9e5c4efe-19f0-4ee0-950c-ba6738c9b6d9)
 
+
+# *Buat Item Berita
+Anda sekarang tahu bagaimana Anda bisa membaca data dari database menggunakan CodeIgniter, tapi Anda belum menulis informasi apa pun ke database. Di bagian ini, Anda akan memperluas pengontrol berita dan model yang dibuat sebelumnya untuk menyertakan fungsi ini.
+
+### Aktifkan Filter CSRF
+Buka file app/Config/Filters.php dan perbarui $methodsproperti seperti berikut:
+```shell
+<?php
+
+namespace Config;
+
+use CodeIgniter\Config\BaseConfig;
+
+class Filters extends BaseConfig
+{
+    // ...
+
+    public $methods = [
+        'post' => ['csrf'],
+    ];
+
+    // ...
+}
+```
+>[!WARNING]
+>Secara umum, jika Anda menggunakan $methodsfilter, Anda harus menonaktifkan Perutean Otomatis (Legacy) karena Perutean Otomatis (Legacy) mengizinkan metode HTTP apa pun untuk mengakses pengontrol. Mengakses pengontrol dengan metode yang tidak Anda harapkan dapat melewati filter.
+
+### Tambahkan Routes
+Sebelum Anda dapat mulai menambahkan item berita ke dalam aplikasi CodeIgniter Anda, Anda harus menambahkan aturan tambahan ke file app/Config/Routes.php . Pastikan file Anda berisi yang berikut ini:
+```shell
+<?php
+
+// ...
+
+use App\Controllers\News;
+use App\Controllers\Pages;
+
+$routes->get('news', [News::class, 'index']);
+$routes->get('news/new', [News::class, 'new']); // Add this line
+$routes->post('news', [News::class, 'create']); // Add this line
+$routes->get('news/(:segment)', [News::class, 'show']);
+
+$routes->get('pages', [Pages::class, 'index']);
+$routes->get('(:segment)', [Pages::class, 'view']);
+```
+Petunjuk rute untuk 'news/new'ditempatkan sebelum petunjuk untuk untuk 'news/(:segment)'memastikan bahwa formulir untuk membuat item berita ditampilkan.
+Baris ini $routes->post()mendefinisikan router untuk permintaan POST. Ini hanya cocok dengan permintaan POST ke jalur URI /news , dan dipetakan ke create()metode kelas News.
+
+### Buat Form untuk berita
+Buat tampilan baru di app/Views/news/create.php :
+```shell
+<h2><?= esc($title) ?></h2>
+
+<?= session()->getFlashdata('error') ?>
+<?= validation_list_errors() ?>
+
+<form action="/news" method="post">
+    <?= csrf_field() ?>
+
+    <label for="title">Title</label>
+    <input type="input" name="title" value="<?= set_value('title') ?>">
+    <br>
+
+    <label for="body">Text</label>
+    <textarea name="body" cols="45" rows="4"><?= set_value('body') ?></textarea>
+    <br>
+
+    <input type="submit" name="submit" value="Create news item">
+</form>
+```
+### Buat method untuk menampilkan formulir
+Kami memuat pembantu Formulir dengan fungsinya helper(). Sebagian besar fungsi pembantu memerlukan pembantu untuk dimuat sebelum digunakan.
+Kemudian mengembalikan tampilan formulir yang dibuat.
+```shell
+public function new()
+    {
+        helper('form');
+
+        return view('templates/header', ['title' => 'Create a news item'])
+            . view('news/create')
+            . view('templates/footer');
+    }
+```
+
+### Buat method untuk membuat data
+```shell
+public function create()
+    {
+        helper('form');
+
+        $data = $this->request->getPost(['title', 'body']);
+
+        // Checks whether the submitted data passed the validation rules.
+        if (! $this->validateData($data, [
+            'title' => 'required|max_length[255]|min_length[3]',
+            'body'  => 'required|max_length[5000]|min_length[10]',
+        ])) {
+            // The validation fails, so returns the form.
+            return $this->new();
+        }
+
+        // Gets the validated data.
+        $post = $this->validator->getValidated();
+
+        $model = model(NewsModel::class);
+
+        $model->save([
+            'title' => $post['title'],
+            'slug'  => url_title($post['title'], '-', true),
+            'body'  => $post['body'],
+        ]);
+
+        return view('templates/header', ['title' => 'Create a news item'])
+            . view('news/success')
+            . view('templates/footer');
+    }
+```
+Kode di atas menambahkan banyak fungsi.
+
+Ambil Datanya
+Pertama, kita menggunakan objek IncomingRequest$this->request , yang diatur di pengontrol oleh kerangka kerja.
+
+Kami mendapatkan item yang diperlukan dari data POST oleh pengguna dan mengaturnya dalam $datavariabel.
+
+Validasi Data
+Selanjutnya, Anda akan menggunakan fungsi pembantu yang disediakan oleh Kontroler, validasiData() untuk memvalidasi data yang dikirimkan. Dalam hal ini, kolom judul dan isi wajib diisi dan panjangnya spesifik.
+
+CodeIgniter memiliki perpustakaan validasi yang kuat seperti yang ditunjukkan di atas. Anda dapat membaca lebih lanjut tentang perpustakaan Validasi .
+
+Jika validasi gagal, kami memanggil new()metode yang baru saja Anda buat dan mengembalikan formulir HTML.
+
+Simpan Item Berita
+Jika validasi melewati semua aturan, kita mendapatkan data yang divalidasi dengan $this->validator->getValidated() dan mengaturnya dalam $postvariabel.
+
+Ini NewsModeldimuat dan dipanggil. Ini menangani penyampaian item berita ke dalam model. Metode save() menangani penyisipan atau pembaruan catatan secara otomatis, berdasarkan apakah metode tersebut menemukan kunci array yang cocok dengan kunci utama.
+
+Ini berisi fungsi baru url_title(). Fungsi ini - disediakan oleh pembantu URL - menghapus string yang Anda berikan, mengganti semua spasi dengan tanda hubung ( -) dan memastikan semuanya dalam karakter huruf kecil. Ini memberi Anda siput yang bagus, cocok untuk membuat URI.
