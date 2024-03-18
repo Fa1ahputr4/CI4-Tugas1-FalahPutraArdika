@@ -1,9 +1,12 @@
-# CodeIgniter 4 Application Starter
+# CodeIgniter 4 
 
-## What is CodeIgniter?
+## Apa itu CodeIgniter4 ?
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+CodeIgniter adalah framework web full-stack PHP yang ringan, cepat, fleksibel dan aman.
+Informasi lebih lanjut dapat ditemukan di [situs resmi](https://codeigniter.com).
+
+# Instalasi
+
 
 This repository holds a composer-installable app starter.
 It has been built from the
