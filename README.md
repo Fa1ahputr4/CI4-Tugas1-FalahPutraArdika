@@ -134,9 +134,8 @@ class Pages extends BaseController
 ## 3. Struktur Aplikasi
 Untuk mendapatkan hasil maksimal dari CodeIgniter, Anda perlu memahami bagaimana struktur aplikasi, secara default, dan apa yang dapat Anda ubah untuk memenuhi kebutuhan aplikasi Anda.
 ### Direktori Default
-1. aplikasi
-Direktori appadalah tempat semua kode aplikasi Anda berada. Ini hadir dengan struktur direktori default yang berfungsi dengan baik untuk banyak aplikasi. Folder berikut membentuk konten dasar:
-
+### Aplikasi
+aplikasi Direktori adalah tempat semua kode aplikasi Anda berada. Ini hadir dengan struktur direktori default yang berfungsi dengan baik untuk banyak aplikasi. Folder berikut membentuk konten dasar:
 app/
     Config/         Stores the configuration files
     Controllers/    Controllers determine the program flow
@@ -148,6 +147,5 @@ app/
     Models/         Models work with the database to represent the business entities
     ThirdParty/     ThirdParty libraries that can be used in application
     Views/          Views make up the HTML that is displayed to the client
-Karena appdirektori sudah diberi namespace, Anda bebas memodifikasi struktur direktori ini agar sesuai dengan kebutuhan aplikasi Anda. Misalnya, Anda mungkin memutuskan untuk mulai menggunakan pola Repositori dan Model Entitas untuk bekerja dengan data Anda. Dalam hal ini, Anda dapat mengganti nama Modelsdirektori menjadi Repositories, dan menambahkan direktori baru Entities.
 
 
