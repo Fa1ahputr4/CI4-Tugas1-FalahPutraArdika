@@ -489,4 +489,102 @@ class NewsModel extends Model
 Data Berhasil ditambahkan
 ![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/4bc01cc7-1503-4830-bb82-fad228dcb21a)
 
+# *Database Migration
+Migrasi adalah cara mudah bagi Anda untuk mengubah database Anda secara terstruktur dan terorganisir. Anda dapat mengedit fragmen SQL dengan tangan tetapi Anda kemudian bertanggung jawab untuk memberi tahu pengembang lain bahwa mereka harus membuka dan menjalankannya. Anda juga harus melacak perubahan mana yang perlu dijalankan terhadap mesin produksi saat Anda menerapkannya lagi.
+
+### Nama file migrasi
+Setiap Migrasi dijalankan dalam urutan numerik maju atau mundur tergantung pada metode yang diambil. Setiap migrasi diberi nomor menggunakan stempel waktu saat migrasi dibuat, dalam format YYYY-MM-DD-HHIISS (misalnya, 2012-10-31-100537 ). Hal ini membantu mencegah konflik penomoran saat bekerja dalam lingkungan tim.
+Awali file migrasi Anda dengan nomor migrasi diikuti dengan garis bawah dan nama deskriptif untuk migrasi tersebut. Tahun, bulan, dan tanggal dapat dipisahkan satu sama lain dengan tanda hubung, garis bawah, atau tidak sama sekali.Misalnya:
+31-10-2012-100538_AlterBlogTrackViews.php
+
+### Buat migrasi
+Ini akan menjadi migrasi pertama untuk situs baru yang memiliki blog. Semua migrasi masuk ke direktori app/Database/Migrations/ dan memiliki nama seperti 2022-01-31-013057_AddBlog.php .
+```shelss
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class AddBlog extends Migration
+{
+    public function up()
+    {
+        $this->forge->addField([
+            'blog_id' => [
+                'type'           => 'INT',
+                'constraint'     => 5,
+                'unsigned'       => true,
+                'auto_increment' => true,
+            ],
+            'blog_jdl' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '100',
+            ],
+            'blog_desk' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+        ]);
+        $this->forge->addKey('blog_id', true);
+        $this->forge->createTable('blog');
+    }
+
+    public function down()
+    {
+        $this->forge->dropTable('blog');
+    }
+}
+```
+
+
+### Foreign Key
+Jika tabel Anda menyertakan Kunci Asing, migrasi sering kali dapat menimbulkan masalah saat Anda mencoba menghapus tabel dan kolom. Untuk sementara waktu mengabaikan pemeriksaan kunci asing saat menjalankan migrasi, gunakan metode disableForeignKeyChecks()dan enableForeignKeyChecks()pada koneksi database.
+```shelss
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class AddBlog extends Migration
+{
+    public function up()
+    {
+        $this->db->disableForeignKeyChecks();
+
+        // Migration rules would go here..
+
+        $this->db->enableForeignKeyChecks();
+    }
+}
+```
+
+### Grup Basis Data 
+Migrasi hanya akan dijalankan terhadap satu grup database. Jika Anda memiliki beberapa grup yang ditentukan di app/Config/Database.php , maka secara default grup tersebut akan berjalan sesuai dengan $defaultGroupyang ditentukan dalam file konfigurasi yang sama.Mungkin ada saatnya Anda memerlukan skema berbeda untuk grup database berbeda. Mungkin Anda memiliki satu database yang digunakan untuk semua informasi umum situs, sementara database lain digunakan untuk data penting misi.Anda dapat memastikan bahwa migrasi dijalankan hanya terhadap grup yang tepat dengan mengatur $DBGroupproperti pada migrasi Anda. Nama ini harus sama persis dengan nama grup database:
+```shelss
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class AddBlog extends Migration
+{
+    protected $DBGroup = 'alternate_db_group';
+
+    public function up()
+    {
+        // ...
+    }
+
+    public function down()
+    {
+        // ...
+    }
+}
+```
+
+### Migrasi
+![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/ebcf40cd-78ab-4966-857b-179cc96c8dae)
 
