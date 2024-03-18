@@ -561,7 +561,7 @@ class AddBlog extends Migration
 ```
 
 ### Grup Basis Data 
-Migrasi hanya akan dijalankan terhadap satu grup database. Jika Anda memiliki beberapa grup yang ditentukan di app/Config/Database.php , maka secara default grup tersebut akan berjalan sesuai dengan $defaultGroupyang ditentukan dalam file konfigurasi yang sama.Mungkin ada saatnya Anda memerlukan skema berbeda untuk grup database berbeda. Mungkin Anda memiliki satu database yang digunakan untuk semua informasi umum situs, sementara database lain digunakan untuk data penting misi.Anda dapat memastikan bahwa migrasi dijalankan hanya terhadap grup yang tepat dengan mengatur $DBGroupproperti pada migrasi Anda. Nama ini harus sama persis dengan nama grup database:
+Migrasi hanya akan dijalankan terhadap satu grup database. Jika Anda memiliki beberapa grup yang ditentukan di app/Config/Database.php , maka secara default grup tersebut akan berjalan sesuai dengan $defaultGroup yang ditentukan dalam file konfigurasi yang sama.Mungkin ada saatnya Anda memerlukan skema berbeda untuk grup database berbeda. Mungkin Anda memiliki satu database yang digunakan untuk semua informasi umum situs, sementara database lain digunakan untuk data penting misi.Anda dapat memastikan bahwa migrasi dijalankan hanya terhadap grup yang tepat dengan mengatur $DBGroupproperti pada migrasi Anda. Nama ini harus sama persis dengan nama grup database:
 ```shelss
 <?php
 
