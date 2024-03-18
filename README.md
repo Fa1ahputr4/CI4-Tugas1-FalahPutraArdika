@@ -25,7 +25,7 @@ Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, y
    Perintah di atas akan membuat folder root proyek .
    Jika Anda menghilangkan argumen “project-root”, perintah akan membuat folder “appstarter”, yang dapat diganti namanya sesuai kebutuhan.
 
-   >[!IMPORTANT]
+> [!IMPORTANT]
    >Saat Anda menerapkan ke server produksi, jangan lupa untuk menjalankan perintah berikut:
    >```shell
    >composer install --no-dev
