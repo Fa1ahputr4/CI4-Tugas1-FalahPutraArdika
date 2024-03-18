@@ -14,7 +14,7 @@ Komposer dapat digunakan dalam beberapa cara untuk menginstal CodeIgniter4 di si
 Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, yang kemudian akan Anda gunakan sebagai dasar untuk aplikasi web baru. Teknik kedua yang dijelaskan di bawah ini memungkinkan Anda menambahkan CodeIgniter4 ke aplikasi web yang sudah ada,
 
 >[!NOTE]
->ika Anda menggunakan repositori Git untuk menyimpan kode Anda, atau untuk berkolaborasi dengan orang lain, maka folder vendor biasanya akan “git diabaikan”. Dalam kasus seperti ini, Anda perlu melakukan hal berikut saat mengkloning repositori ke sistem baru.`composer update`
+>Jika Anda menggunakan repositori Git untuk menyimpan kode Anda, atau untuk berkolaborasi dengan orang lain, maka folder vendor biasanya akan “git diabaikan”. Dalam kasus seperti ini, Anda perlu melakukan hal berikut saat mengkloning repositori ke sistem baru.`composer update`
 
 1. Instalasi Pertama
    Instalasi ini digunakan untuk pemula yang baru akan membuart project dari awal
@@ -25,8 +25,13 @@ Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, y
    Perintah di atas akan membuat folder root proyek .
    Jika Anda menghilangkan argumen “project-root”, perintah akan membuat folder “appstarter”, yang dapat diganti namanya sesuai kebutuhan.
 
-   >[!NOTE]
-   >Sebelum v4.4.0, autoloader CodeIgniter tidak mengizinkan karakter khusus yang ilegal dalam nama file pada sistem operasi tertentu. Simbol yang dapat digunakan adalah /,       _, ., :, \dan spasi. Jadi jika Anda menginstal CodeIgniter di bawah folder yang berisi karakter khusus seperti (, ), dll., CodeIgniter tidak berfungsi. Sejak v4.4.0,          pembatasan ini telah dihapus.
+   >[!IMPORTANT]
+   >Saat Anda menerapkan ke server produksi, jangan lupa untuk menjalankan perintah berikut:
+   >```shell
+   >composer install --no-dev
+   >```
+   >perintah di atas akan menghapus paket Composer hanya untuk pengembangan yang tidak diperlukan di lingkungan produksi. Ini akan sangat mengurangi ukuran folder vendor.
+
    
 3. Instalasi Kedua
 
