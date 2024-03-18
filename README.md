@@ -450,21 +450,43 @@ public function create()
 ```
 Kode di atas menambahkan banyak fungsi.
 
-Ambil Datanya
+### Ambil Datanya
 Pertama, kita menggunakan objek IncomingRequest$this->request , yang diatur di pengontrol oleh kerangka kerja.
-
 Kami mendapatkan item yang diperlukan dari data POST oleh pengguna dan mengaturnya dalam $datavariabel.
 
-Validasi Data
-Selanjutnya, Anda akan menggunakan fungsi pembantu yang disediakan oleh Kontroler, validasiData() untuk memvalidasi data yang dikirimkan. Dalam hal ini, kolom judul dan isi wajib diisi dan panjangnya spesifik.
+### Validasi Data
+Selanjutnya, Anda akan menggunakan fungsi pembantu yang disediakan oleh Kontroler, validasiData() untuk memvalidasi data yang dikirimkan. Dalam hal ini, kolom judul dan isi wajib diisi dan panjangnya spesifik.CodeIgniter memiliki perpustakaan validasi yang kuat seperti yang ditunjukkan di atas. Anda dapat membaca lebih lanjut tentang perpustakaan Validasi .Jika validasi gagal, kami memanggil new()metode yang baru saja Anda buat dan mengembalikan formulir HTML.
 
-CodeIgniter memiliki perpustakaan validasi yang kuat seperti yang ditunjukkan di atas. Anda dapat membaca lebih lanjut tentang perpustakaan Validasi .
+### Simpan Item Berita
+Jika validasi melewati semua aturan, kita mendapatkan data yang divalidasi dengan $this->validator->getValidated() dan mengaturnya dalam $postvariabel.Ini NewsModeldimuat dan dipanggil. Ini menangani penyampaian item berita ke dalam model. Metode save() menangani penyisipan atau pembaruan catatan secara otomatis, berdasarkan apakah metode tersebut menemukan kunci array yang cocok dengan kunci utama.Ini berisi fungsi baru url_title(). Fungsi ini - disediakan oleh pembantu URL - menghapus string yang Anda berikan, mengganti semua spasi dengan tanda hubung ( -) dan memastikan semuanya dalam karakter huruf kecil. Ini memberi Anda siput yang bagus, cocok untuk membuat URI.
 
-Jika validasi gagal, kami memanggil new()metode yang baru saja Anda buat dan mengembalikan formulir HTML.
+### Kembalikan halaman sukses
+Setelah ini, file tampilan dimuat dan dikembalikan untuk menampilkan pesan sukses. Buat tampilan di app/Views/news/success.php dan tulis pesan sukses.
+Ini bisa sesederhana:
+```shell
+<p>News item created successfully.</p>
+```
 
-Simpan Item Berita
-Jika validasi melewati semua aturan, kita mendapatkan data yang divalidasi dengan $this->validator->getValidated() dan mengaturnya dalam $postvariabel.
+### Update Model
+Satu-satunya hal yang tersisa adalah memastikan bahwa model Anda sudah diatur untuk memungkinkan data disimpan dengan benar. Metode save()yang digunakan akan menentukan apakah informasi harus dimasukkan atau apakah baris sudah ada dan harus diperbarui, berdasarkan keberadaan kunci utama. Dalam hal ini, tidak ada idbidang yang diteruskan ke sana, sehingga baris baru akan dimasukkan ke dalam tabelnya, news. Namun secara default metode insert dan update pada Model tidak akan benar-benar menyimpan data apapun karena tidak mengetahui field apa yang aman untuk diupdate. Edit NewsModeluntuk memberikannya daftar bidang yang dapat diperbarui di $allowedFieldsproperti.
+```shell
+<?php
 
-Ini NewsModeldimuat dan dipanggil. Ini menangani penyampaian item berita ke dalam model. Metode save() menangani penyisipan atau pembaruan catatan secara otomatis, berdasarkan apakah metode tersebut menemukan kunci array yang cocok dengan kunci utama.
+namespace App\Models;
 
-Ini berisi fungsi baru url_title(). Fungsi ini - disediakan oleh pembantu URL - menghapus string yang Anda berikan, mengganti semua spasi dengan tanda hubung ( -) dan memastikan semuanya dalam karakter huruf kecil. Ini memberi Anda siput yang bagus, cocok untuk membuat URI.
+use CodeIgniter\Model;
+
+class NewsModel extends Model
+{
+    protected $table = 'news';
+
+    protected $allowedFields = ['title', 'slug', 'body'];
+}
+```
+
+### Berikut Hasilnya 
+![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/3aa5302e-9ac3-4de2-8462-8ae45e767ecc)
+Data Berhasil ditambahkan
+![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/4bc01cc7-1503-4830-bb82-fad228dcb21a)
+
+
