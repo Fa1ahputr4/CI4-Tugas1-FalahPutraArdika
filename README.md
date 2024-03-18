@@ -6,7 +6,7 @@ CodeIgniter adalah framework web full-stack PHP yang ringan, cepat, fleksibel da
 Informasi lebih lanjut dapat ditemukan di [situs resmi](https://codeigniter.com).
 
 # > Instalasi
-## > Instalasi Composer
+## 1. Instalasi Composer
 Komposer dapat digunakan dalam beberapa cara untuk menginstal CodeIgniter4 di sistem Anda.
 > [!IMPORTANT]
 > CodeIgniter4 memerlukan Composer 2.0.14 atau lebih baru.
@@ -39,64 +39,115 @@ Di root project anda ketikan sebagai berikut :
 composer require codeigniter4/framework
 ```
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+# > Bangun Aplikasi Pertama Anda
+## 2. Halaman Statis
+Hal pertama yang akan Anda lakukan adalah menyiapkan aturan perutean untuk menangani halaman statis.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+Perutean mengaitkan URI dengan metode pengontrol. Pengontrol hanyalah sebuah kelas yang membantu mendelegasikan pekerjaan. Kami akan membuat pengontrol nanti.
+Mari kita siapkan aturan perutean. Buka file rute yang terletak di app/Config/Routes.php .
+Satu-satunya petunjuk rute untuk memulai adalah:
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+```shell
+<?php
 
-## Installation & updates
+use CodeIgniter\Router\RouteCollection;
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+/**
+ * @var RouteCollection $routes
+ */
+$routes->get('/', 'Home::index');
+```
+Arahan ini mengatakan bahwa setiap permintaan masuk tanpa konten apa pun yang ditentukan harus ditangani oleh index()metode di dalam Homepengontrol.
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+### Buat Pengontrol Halaman
+Buat file di app/Controllers/Pages.php dengan kode berikut.
 
-## Setup
+```shell
+<?php
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+namespace App\Controllers;
 
-## Important Change with index.php
+class Pages extends BaseController
+{
+    public function index()
+    {
+        return view('welcome_message');
+    }
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+    public function view($page = 'home')
+    {
+        // ...
+    }
+}
+```
+Anda telah membuat kelas bernama Pages, dengan view()metode yang menerima satu argumen bernama $page. Ia juga memiliki index()metode, sama dengan pengontrol default yang ditemukan di app/Controllers/Home.php ; metode itu menampilkan halaman selamat datang CodeIgniter.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+### Buat Tampilan
+Buat header di app/Views/templates/header.php dan tambahkan kode berikut:
+```shell
+    <!doctype html>
+    <html>
+    <head>
+        <title>Falah Putra Ardika</title>
+    </head>
+    <body>
 
-**Please** read the user guide for a better explanation of how CI4 works!
+        <h1><?= esc($title) ?></h1>
+```
+Header berisi kode HTML dasar yang ingin Anda tampilkan sebelum memuat tampilan utama, bersama dengan judul. Ini juga akan menampilkan $titlevariabel, yang akan kita definisikan nanti di pengontrol. Sekarang, buat footer di app/Views/templates/footer.php yang menyertakan kode berikut:
+```shell
+<em>&copy; 2024</em>
+</body>
 
-## Repository Management
+</html>
+```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+### Menambahkan Logika ke Kontroler
+Untuk memuat halaman tersebut, Anda harus memeriksa apakah halaman yang diminta benar-benar ada. Ini akan menjadi isi metode view()pada Pagespengontrol yang dibuat di atas:
+```shell
+<?php
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+namespace App\Controllers;
 
-## Server Requirements
+use CodeIgniter\Exceptions\PageNotFoundException; // Add this line
 
-PHP version 7.4 or higher is required, with the following extensions installed:
+class Pages extends BaseController
+{
+    // ...
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+    public function view($page = 'home')
+    {
+        if (! is_file(APPPATH . 'Views/pages/' . $page . '.php')) {
+            // Halaman tidak ada
+            throw new PageNotFoundException($page);
+        }
 
-> [!WARNING]
-> The end of life date for PHP 7.4 was November 28, 2022.
-> The end of life date for PHP 8.0 was November 26, 2023.
-> If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> The end of life date for PHP 8.1 will be November 25, 2024.
+        $data['title'] = ucfirst($page); // Gunakan Huruf Kapital pada abjad pertama
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+        return view('templates/header', $data)
+            . view('pages/' . $page)
+            . view('templates/footer');
+    }
+}
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+## 3. Struktur Aplikasi
+Untuk mendapatkan hasil maksimal dari CodeIgniter, Anda perlu memahami bagaimana struktur aplikasi, secara default, dan apa yang dapat Anda ubah untuk memenuhi kebutuhan aplikasi Anda.
+### Direktori Default
+1. aplikasi
+Direktori appadalah tempat semua kode aplikasi Anda berada. Ini hadir dengan struktur direktori default yang berfungsi dengan baik untuk banyak aplikasi. Folder berikut membentuk konten dasar:
+
+app/
+    Config/         Stores the configuration files
+    Controllers/    Controllers determine the program flow
+    Database/       Stores the database migrations and seeds files
+    Filters/        Stores filter classes that can run before and after controller
+    Helpers/        Helpers store collections of standalone functions
+    Language/       Multiple language support reads the language strings from here
+    Libraries/      Useful classes that don't fit in another category
+    Models/         Models work with the database to represent the business entities
+    ThirdParty/     ThirdParty libraries that can be used in application
+    Views/          Views make up the HTML that is displayed to the client
+Karena appdirektori sudah diberi namespace, Anda bebas memodifikasi struktur direktori ini agar sesuai dengan kebutuhan aplikasi Anda. Misalnya, Anda mungkin memutuskan untuk mulai menggunakan pola Repositori dan Model Entitas untuk bekerja dengan data Anda. Dalam hal ini, Anda dapat mengganti nama Modelsdirektori menjadi Repositories, dan menambahkan direktori baru Entities.
+
+
