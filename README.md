@@ -20,7 +20,7 @@ Teknik pertama menjelaskan pembuatan proyek kerangka menggunakan CodeIgniter4, y
    Instalasi ini digunakan untuk pemula yang baru akan membuart project dari awal
    Pada folder Root anda
    ```shell
-   echo "composer create-project codeigniter4/appstarter project-root"
+   "composer create-project codeigniter4/appstarter project-root"
    
 3. INstalasi Kedua
 
