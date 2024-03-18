@@ -6,7 +6,7 @@ CodeIgniter adalah framework web full-stack PHP yang ringan, cepat, fleksibel da
 Informasi lebih lanjut dapat ditemukan di [situs resmi](https://codeigniter.com).
 
 # > Instalasi
-## 1. Instalasi Composer
+## *Instalasi Composer
 Komposer dapat digunakan dalam beberapa cara untuk menginstal CodeIgniter4 di sistem Anda.
 > [!IMPORTANT]
 > CodeIgniter4 memerlukan Composer 2.0.14 atau lebih baru.
@@ -40,7 +40,7 @@ composer require codeigniter4/framework
 ```
 
 # > Bangun Aplikasi Pertama Anda
-## 2. Halaman Statis
+## *Halaman Statis
 Hal pertama yang akan Anda lakukan adalah menyiapkan aturan perutean untuk menangani halaman statis.
 
 Perutean mengaitkan URI dengan metode pengontrol. Pengontrol hanyalah sebuah kelas yang membantu mendelegasikan pekerjaan. Kami akan membuat pengontrol nanti.
@@ -134,9 +134,10 @@ class Pages extends BaseController
 }
 ```
 Hasilnya sebagai berikut :
+
 ![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/9119faec-e884-473e-b17d-ebe9b1b2eb7c)
 
-## 3. Struktur Aplikasi
+## *Struktur Aplikasi
 Untuk mendapatkan hasil maksimal dari CodeIgniter, Anda perlu memahami bagaimana struktur aplikasi, secara default, dan apa yang dapat Anda ubah untuk memenuhi kebutuhan aplikasi Anda.
 
 ### Aplikasi
@@ -154,7 +155,179 @@ Direktori ini menampung semua direktori yang mungkin perlu ditulisi selama masa 
 ### Test
 Direktori ini disiapkan untuk menyimpan file pengujian Anda. Direktori ini _supportmenampung berbagai kelas tiruan dan utilitas lain yang dapat Anda gunakan saat menulis pengujian Anda. Direktori ini tidak perlu ditransfer ke server produksi Anda.
 
-## 4. Mode;, View, dan Controller
+## *Mode;, View, dan Controller
 ### Apa itu MVC?
 Setiap kali Anda membuat aplikasi, Anda harus menemukan cara untuk mengatur kode agar mudah menemukan file yang tepat dan memudahkan pemeliharaan. Seperti kebanyakan kerangka web, CodeIgniter menggunakan pola Model, View, Controller (MVC) untuk mengatur file. Hal ini menjaga data, presentasi, dan aliran melalui aplikasi sebagai bagian yang terpisah.
+
+### Model
+Model adalah bagian dari aplikasi yang bertanggung jawab atas data. Mereka menangani penyimpanan dan pengambilan data dari database, serta menerapkan aturan bisnis pada data tersebut. Misalnya, model dapat memastikan bahwa data yang dimasukkan ke dalam database sesuai dengan standar tertentu.
+
+### View
+View adalah file yang sederhana dan biasanya berbentuk HTML dengan sedikit kode PHP. Mereka bertugas menampilkan informasi kepada pengguna, seperti teks atau tabel, yang diterima dari pengontrol. Contoh penggunaan tampilan adalah menampilkan halaman profil pengguna atau daftar postingan.
+
+### Controller
+Pengendali merupakan bagian yang menghubungkan pengguna dengan aplikasi. Mereka menerima masukan dari pengguna, seperti klik tombol atau permintaan halaman, dan menentukan tindakan yang harus dilakukan selanjutnya. Pengendali juga menangani tugas-tugas terkait permintaan HTTP, seperti verifikasi pengguna atau pengalihan halaman.
+
+## *Bagian Berita
+Di bagian ini, kita membahas beberapa konsep dasar kerangka kerja dengan menulis kelas yang mereferensikan halaman statis. Kami membersihkan URI dengan menambahkan aturan perutean khusus. Sekarang saatnya memperkenalkan konten dinamis dan mulai menggunakan database.
+
+### Buat Database
+Anda perlu membuat database ci4tutor yang dapat digunakan untuk tutorial ini, dan kemudian mengkonfigurasi CodeIgniter untuk menggunakannya.
+Menggunakan klien database Anda, sambungkan ke database Anda dan jalankan perintah SQL di bawah ini (MySQL):
+```shell
+CREATE TABLE news (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    title VARCHAR(128) NOT NULL,
+    slug VARCHAR(128) NOT NULL,
+    body TEXT NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE slug (slug)
+);
+```
+Lalu isi database dengan perintah berikut :
+```shell
+INSERT INTO news VALUES
+(1, 'Pembangunan Infrastruktur', 'pembangunan-infrastruktur', 'Pemerintah mengumumkan proyek pembangunan infrastruktur baru untuk meningkatkan konektivitas di seluruh Indonesia.'),
+(2, 'Penemuan Spesies Baru', 'penemuan-spesies-baru', 'Ilmuwan menemukan spesies baru kadal yang hanya ditemukan di hutan hujan Kalimantan.'),
+(3, 'Peningkatan Ekonomi', 'peningkatan-ekonomi', 'Bank Indonesia melaporkan pertumbuhan ekonomi yang kuat, didorong oleh sektor manufaktur dan ekspor.');
+```
+
+### Hubungkan ke Basis Data
+File konfigurasi lokal, .env , yang Anda buat saat menginstal CodeIgniter, harus memiliki pengaturan properti database yang tidak diberi komentar dan disetel dengan tepat untuk database yang ingin Anda gunakan. Pastikan Anda telah mengkonfigurasi database Anda dengan benar seperti yang dijelaskan dalam Konfigurasi Database :
+```shell
+database.default.hostname = localhost
+database.default.database = ci4tutor
+database.default.username = root
+database.default.password = root
+database.default.DBDriver = MySQLi
+```
+
+### Buat Model
+Buka direktori app/Models dan buat file baru bernama NewsModel.php dan tambahkan kode berikut.
+``` shell
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class NewsModel extends Model
+{
+    protected $table = 'news';
+}
+```
+Kode ini terlihat mirip dengan kode pengontrol yang digunakan sebelumnya. Ini menciptakan model baru dengan memperluas CodeIgniter\Modeldan memuat perpustakaan database. Ini akan membuat kelas database tersedia melalui $this->dbobjek.
+
+### Buat Metode NewsModel::getNews()
+``` shell
+public function getNews($slug = false)
+    {
+        if ($slug === false) {
+            return $this->findAll();
+        }
+
+        return $this->where(['slug' => $slug])->first();
+    }
+```
+Dengan kode ini, Anda dapat melakukan dua kueri berbeda. Anda bisa mendapatkan semua catatan berita, atau mendapatkan item berita melalui siputnya. Anda mungkin memperhatikan bahwa $slugvariabel tidak di-escape sebelum menjalankan kueri; Pembuat Kueri melakukan ini untuk Anda.Dua metode yang digunakan di sini, findAll()dan first(), disediakan oleh CodeIgniter\Modelkelas. Mereka sudah mengetahui tabel yang akan digunakan berdasarkan $table properti yang kita atur di NewsModelkelas tadi. Mereka adalah metode pembantu yang menggunakan Pembuat Kueri untuk menjalankan perintahnya pada tabel saat ini, dan mengembalikan serangkaian hasil dalam format pilihan Anda. Dalam contoh ini, findAll()mengembalikan array dari array.
+
+### Tambahkan routs
+Ubah file app/Config/Routes.php Anda , sehingga terlihat seperti berikut:
+```shell
+<?php
+
+// ...
+
+use App\Controllers\News; // Add this line
+use App\Controllers\Pages;
+
+$routes->get('news', [News::class, 'index']);           // Add this line
+$routes->get('news/(:segment)', [News::class, 'show']); // Add this line
+
+$routes->get('pages', [Pages::class, 'index']);
+$routes->get('(:segment)', [Pages::class, 'view']);
+```
+
+### Buat Controller untuk berita
+Buat pengontrol baru di app/Controllers/News.php .
+```shell
+<?php
+
+namespace App\Controllers;
+
+use App\Models\NewsModel;
+
+class News extends BaseController
+{
+    public function index()
+    {
+        $model = model(NewsModel::class);
+
+        $data['news'] = $model->getNews();
+    }
+
+    public function show($slug = null)
+    {
+        $model = model(NewsModel::class);
+
+        $data['news'] = $model->getNews($slug);
+    }
+}
+```
+### Buat Index Method
+```shell
+<?php
+
+namespace App\Controllers;
+
+use App\Models\NewsModel;
+
+class News extends BaseController
+{
+    public function index()
+    {
+        $model = model(NewsModel::class);
+
+        $data = [
+            'news'  => $model->getNews(),
+            'title' => 'News archive',
+        ];
+
+        return view('templates/header', $data)
+            . view('news/index')
+            . view('templates/footer');
+    }
+
+    // ...
+}
+```
+
+### Buat View Indexs
+Buat app/Views/news/index.php dan tambahkan potongan kode berikutnya.
+```shell
+<h2><?= esc($title) ?></h2>
+
+<?php if (! empty($news) && is_array($news)): ?>
+
+    <?php foreach ($news as $news_item): ?>
+
+        <h3><?= esc($news_item['title']) ?></h3>
+
+        <div class="main">
+            <?= esc($news_item['body']) ?>
+        </div>
+        <p><a href="/news/<?= esc($news_item['slug'], 'url') ?>">View article</a></p>
+
+    <?php endforeach ?>
+
+<?php else: ?>
+
+    <h3>No News</h3>
+
+    <p>Unable to find any news for you.</p>
+
+<?php endif ?>
+```
+### Berikut Hasilnya 
+![image](https://github.com/Fa1ahputr4/Tugas1/assets/134368686/9e5c4efe-19f0-4ee0-950c-ba6738c9b6d9)
 
